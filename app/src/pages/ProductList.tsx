@@ -4,7 +4,7 @@ import { useDebounce } from '../hooks/useDebounce';
 import { ProductFilters } from '../components/ProductFilters';
 import { ProductTable } from '../components/ProductTable';
 import { Pagination } from '../components/Pagination';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ITENS_POR_PAGINA = 10;
 
@@ -38,8 +38,12 @@ export function ProductList() {
 }
 
   return (
-    <div style={{ padding: '2rem' }}>
+   <div className="container">
       <h1>Produtos</h1>
+
+<Link to="/produtos/novo">
+  <button style={{ marginBottom: '1rem' }}>+ Novo Produto</button>
+</Link>
 
       <ProductFilters
         busca={busca}

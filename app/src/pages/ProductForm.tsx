@@ -79,7 +79,7 @@ export function ProductForm() {
   if (erroCarregamento) return <p style={{ padding: '2rem', color: 'red' }}>{erroCarregamento}</p>;
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '400px' }}>
+    <div className="container">
       <Link to="/">← Voltar para a listagem</Link>
       <h1>{modoEdicao ? 'Editar Produto' : 'Novo Produto'}</h1>
 

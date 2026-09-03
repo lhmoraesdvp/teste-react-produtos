@@ -53,7 +53,7 @@ export function ProductDetail() {
   if (!produto) return null;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="container detalhe-produto">
       <Link to="/">← Voltar para a listagem</Link>
       <h1>{produto.nome}</h1>
       <p><strong>Categoria:</strong> {produto.categoria}</p>

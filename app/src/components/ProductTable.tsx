@@ -15,6 +15,7 @@ export function ProductTable({ produtos, onProdutoClick }: ProductTableProps) {
           <th style={thStyle}>Preço</th>
           <th style={thStyle}>Estoque</th>
           <th style={thStyle}>Status</th>
+          <th style={thStyle}>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -34,6 +35,16 @@ export function ProductTable({ produtos, onProdutoClick }: ProductTableProps) {
             </td>
             <td style={tdStyle}>{produto.estoque}</td>
             <td style={tdStyle}>{produto.ativo ? 'Ativo' : 'Inativo'}</td>
+            <td style={tdStyle}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onProdutoClick(produto.id);
+                }}
+              >
+                Detalhes
+              </button>
+            </td>
           </tr>
         ))}
       </tbody>
