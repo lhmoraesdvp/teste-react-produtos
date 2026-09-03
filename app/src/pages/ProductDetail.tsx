@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { buscarProdutoPorId } from '../services/productService';
+import { buscarProdutoPorId, excluirProduto } from '../services/productService';
 import type { Product } from '../types/Product';
 
 export function ProductDetail() {
@@ -10,6 +10,7 @@ export function ProductDetail() {
   const [produto, setProduto] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [excluindo, setExcluindo] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -30,6 +31,23 @@ export function ProductDetail() {
     carregar();
   }, [id]);
 
+  async function handleExcluir() {
+    const confirmar = window.confirm(
+      `Tem certeza que deseja excluir "${produto?.nome}"? Essa ação não pode ser desfeita.`
+    );
+
+    if (!confirmar || !produto) return;
+
+    setExcluindo(true);
+    try {
+      await excluirProduto(produto.id);
+      navigate('/');
+    } catch {
+      alert('Não foi possível excluir o produto. Tente novamente.');
+      setExcluindo(false);
+    }
+  }
+
   if (loading) return <p style={{ padding: '2rem' }}>Carregando...</p>;
   if (erro) return <p style={{ padding: '2rem', color: 'red' }}>{erro}</p>;
   if (!produto) return null;
@@ -49,6 +67,9 @@ export function ProductDetail() {
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
         <button onClick={() => navigate(`/produtos/${produto.id}/editar`)}>
           Editar
+        </button>
+        <button onClick={handleExcluir} disabled={excluindo}>
+          {excluindo ? 'Excluindo...' : 'Excluir'}
         </button>
       </div>
     </div>
