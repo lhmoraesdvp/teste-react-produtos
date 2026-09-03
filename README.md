@@ -7,6 +7,7 @@ Teste prático para a vaga de Desenvolvedor(a) Pleno Front-End (React), desenvol
 - React 18+ com TypeScript
 - Vite (setup e bundler)
 - React Router DOM (navegação entre telas, detecção de modo criar/editar e sincronização de filtros com a URL)
+- Vitest + React Testing Library (testes automatizados)
 - CSS puro (sem biblioteca de componentes visuais)
 - json-server (API fake fornecida no desafio)
 
@@ -38,6 +39,16 @@ npm run dev
 A aplicação abre em `http://localhost:5173`.
 
 > Importante: a API fake precisa estar rodando na porta 3001 para o front funcionar, já que a URL base está fixada em `http://localhost:3001/produtos` no arquivo de service.
+
+### 3. Rodar os testes automatizados (opcional)
+
+Ainda dentro da pasta `app`:
+
+```
+npm run test
+```
+
+Isso executa a suíte de testes com Vitest + React Testing Library em modo watch.
 
 ## Funcionalidades implementadas
 
@@ -72,7 +83,12 @@ A aplicação abre em `http://localhost:5173`.
 - [x] **TypeScript bem utilizado** — tipos `Product` e `ProductInput` para os dados de produto, tipagem das respostas da API (`PaginatedProducts`) e tipagem de props em todos os componentes
 - [x] **Debounce na busca por nome** — implementado via hook customizado `useDebounce`, com 500ms de atraso antes de disparar a chamada à API
 - [x] **React Router com URLs refletindo o estado** — busca, categoria e página sincronizadas com a URL via `useSearchParams`, permitindo recarregar a página ou compartilhar o link mantendo os filtros aplicados
-- [ ] **Testes com React Testing Library** — não implementados por restrição de tempo (ver seção abaixo)
+- [x] **Testes com React Testing Library** — suíte com Vitest + RTL cobrindo a validação do formulário (`useProductForm.test.ts`) e a interação do componente de filtros (`ProductFilters.test.tsx`), totalizando 8 testes
+
+## Testes automatizados
+
+- `src/hooks/useProductForm.test.ts`: testa a lógica de validação do formulário isoladamente (via `renderHook`), cobrindo os três critérios obrigatórios — nome mínimo de 3 caracteres, preço maior que zero e estoque zero ou mais — além do caso de sucesso.
+- `src/components/ProductFilters.test.tsx`: testa a renderização do componente de filtros e a interação do usuário (digitação no campo de busca e seleção de categoria), usando `@testing-library/user-event`.
 
 ## Arquitetura e decisões técnicas
 
@@ -85,7 +101,7 @@ A aplicação abre em `http://localhost:5173`.
 
 ## O que não foi implementado / próximos passos
 
-- **Testes automatizados (React Testing Library)**: não implementados por restrição de tempo. Se fosse continuar, começaria testando a validação do `useProductForm` isoladamente (por já estar desacoplada da renderização) e depois um teste de integração da tela de Listagem cobrindo os estados de loading/erro/vazio.
+- **Cobertura de testes mais ampla**: os testes atuais cobrem a validação do formulário e o componente de filtros. Com mais tempo, o próximo passo seria testar a tela de Listagem por completo (estados de loading/erro/vazio, mockando o service) e o fluxo de criação/edição de ponta a ponta.
 - **Lista de categorias dinâmica**: o filtro de categoria usa uma lista fixa no código, extraída manualmente dos dados de exemplo do `db.json`, já que a API não expõe um endpoint de categorias únicas. O ideal seria derivar essa lista dinamicamente a partir dos produtos existentes.
 - **Modal de confirmação customizado**: como mencionado acima, a exclusão usa `window.confirm()` nativo em vez de um componente modal próprio do design da aplicação.
 
@@ -94,11 +110,12 @@ A aplicação abre em `http://localhost:5173`.
 ```
 app/
 ├── src/
-│   ├── components/     # Componentes visuais reutilizáveis
+│   ├── components/     # Componentes visuais reutilizáveis (+ testes)
 │   ├── pages/           # Telas (Listagem, Detalhe, Formulário)
 │   ├── services/        # Chamadas de API centralizadas
-│   ├── hooks/            # Hooks customizados (dados, debounce, validação)
+│   ├── hooks/            # Hooks customizados (dados, debounce, validação) (+ testes)
 │   ├── types/            # Tipos TypeScript
-│   ├── App.tsx           # Configuração das rotas
+│   ├── setupTests.ts     # Configuração do ambiente de testes
+│   ├── App.tsx            # Configuração das rotas
 │   └── main.tsx
 ```
