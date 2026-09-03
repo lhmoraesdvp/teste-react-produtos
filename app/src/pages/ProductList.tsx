@@ -4,6 +4,7 @@ import { useDebounce } from '../hooks/useDebounce';
 import { ProductFilters } from '../components/ProductFilters';
 import { ProductTable } from '../components/ProductTable';
 import { Pagination } from '../components/Pagination';
+import { useNavigate } from 'react-router-dom';
 
 const ITENS_POR_PAGINA = 10;
 
@@ -13,6 +14,7 @@ export function ProductList() {
   const [categoria, setCategoria] = useState('');
 
   const buscaDebounced = useDebounce(busca, 500);
+  const navigate = useNavigate();
 
   const { produtos, total, loading, erro } = useProducts({
     page: pagina,
@@ -32,8 +34,8 @@ export function ProductList() {
   }
 
   function handleProdutoClick(id: number) {
-    console.log('Clicou no produto', id); // depois vira navegação de verdade
-  }
+   navigate(`/produtos/${id}`);
+}
 
   return (
     <div style={{ padding: '2rem' }}>
